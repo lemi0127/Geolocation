@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+    <title>Geolocation Assignment</title>
+</head>
+
+<body id="output"> 
+    
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+  
+  if( navigator.geolocation ){ 
+
+    var params = {enableHighAccuracy: false, timeout:3600, maximumAge:60000};
+    
+    navigator.geolocation.getCurrentPosition( reportPosition, gpsError, params ); 
+    
+  }else{
+
+    alert("Your browser does not support magical geolocation stuff.")
+  }
+});
+
+function reportPosition( position ){
+    
+  var canvas = document.createElement("canvas");
+  canvas.style.height = "400px";
+  canvas.style.width = "400px";
+  var context = canvas.getContext('2d');
+  var img =  document.createElement("img");
+    
+  img.onload = function(){
+    context.drawImage(img, 0,0, 400, 400);
+  }
+    img.src = "https://maps.googleapis.com/maps/api/staticmap?center=" +    position.coords.latitude + "," + position.coords.longitude +    "&zoom=14&size=400x400&markers=color:red%7C" + position.coords.latitude + ","+ position.coords.longitude + "&key=AIzaSyC5WKfAVDYtc7Zreaasa2wrtUedz7TrrOM";
+    
+    document.querySelector("#output").appendChild(canvas);
+    
+  var output = document.querySelector("canvas");
+  output.innerHTML += "Latitude: " + position.coords.latitude + "Got it.<br/>"
+  + "Longitude: " + position.coords.longitude + "&deg;<br/>"
+  + "Accuracy: " + position.coords.accuracy + "m<br/>"
+  + "Altitude: " + position.coords.altitude + " m<br/>"
+  + "Heading: " + position.coords.heading + " &deg;<br/>"
+  + "Speed: " + position.coords.speed + " m/s<br/>"
+  + "Timestamp: " + position.timestamp;
+};
+
+function gpsError( error ){   
+  var errors = {
+    1: 'Permission denied',
+    2: 'Position unavailable',
+    3: 'Request timeout'
+  };
+  alert("Error: " + errors[error.code]);
+};
+      
+</script>    
+</body>
+
+</html>
